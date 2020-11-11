@@ -7,6 +7,12 @@ public class Slang {
     public static String fixAbbreviations(String myString) {
 
         String replaceString = myString.replaceAll("PLZ", "please");
+        replaceString = replaceString.replaceAll("FYI", "for your information");
+        replaceString = replaceString.replaceAll("GTFO", "please, leave me alone");
+        replaceString = replaceString.replaceAll("ASAP", "as soon as possible");
+        replaceString = replaceString.replaceAll(":\\)", "[smiling]");
+        replaceString = replaceString.replaceAll(":\\(", "[sad]");
+        replaceString = replaceString.replaceAll("¯\\\\_\\(ツ\\)_/¯", "[such a life]");
         return replaceString;
     }
 
