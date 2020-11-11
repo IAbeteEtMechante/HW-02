@@ -4,4 +4,4 @@ Author: Pierre Schwob
 
 This is the second hoemwork for the class M3-Java (Harbour Space)
 
-![HW-02](![HW](https://github.com/IAbeteEtMechante/HW-02/workflows/HW/badge.svg))
+![HW](https://github.com/IAbeteEtMechante/HW-02/workflows/HW/badge.svg)
