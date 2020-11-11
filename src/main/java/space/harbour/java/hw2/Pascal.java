@@ -27,25 +27,22 @@ public class Pascal {
                 triangle[i][j] = triangle[i - 1][j - 1] + triangle[i - 1][j];
             }
         }
-        int offset;
-        int previousOffset = -1;
         int displaySize;
         int m;
         m = n / 2;
-        //        displaySize = 
-        //   String.valueOf(factorial(n - 1) / factorial(m) / factorial(n - 1 - m)).length();
         displaySize = String.valueOf(triangle[n - 1][m]).length();
 
-        //      int biggestElement = factorial(n - 1) / (factorial(m) * factorial(n - 1 - m));
-        //     System.out.println("Biggest element: " + biggestElement);
-        // displaySize = 6;
         String format = "%" + String.valueOf(displaySize) + "d";
         System.out.println("displaySize: " + displaySize);
-        for (int i = 0; i < n; i++) {
-            offset = ((n - 1 - i) * displaySize) / 2;
+        int[] offset = new int[n];
+        offset[n - 1] = 0;
+        for (int i = n - 2; i >= 0; i--) {
+            offset[i] = ((n - 1 - i) * displaySize) / 2; 
             // we want at least a step of one between lines
-            offset = Math.max(offset, previousOffset + 1); 
-            for (int k = 0; k < offset; k++) {
+            offset[i] = Math.max(offset[i], offset[i + 1] + 1); 
+        }
+        for (int i = 0; i < n; i++) {
+            for (int k = 0; k < offset[i]; k++) {
                 System.out.print(" ");
             }
 
