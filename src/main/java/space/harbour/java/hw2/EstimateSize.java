@@ -2,46 +2,89 @@ package space.harbour.java.hw2;
 
 public class EstimateSize {
 
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("Before GC:");
-        long total = Runtime.getRuntime().totalMemory();
-        long free = Runtime.getRuntime().freeMemory();
-        long occupiedBeforeGc = total - free;
-        System.out.println("Total Memory: " + total);
-        System.out.println("Free Memory: " + free);
-        System.out.println("Occupied Memory: " + occupiedBeforeGc);
-        System.out.println();
+    public static void runGarbageCollection() throws InterruptedException {
 
         System.gc();
         Thread.sleep(10);
 
+    }
 
-        System.out.println("After GC:");
-        total = Runtime.getRuntime().totalMemory();
-        free = Runtime.getRuntime().freeMemory();
-        long occupiedAfterGc = total - free;
-        System.out.println("Total Memory: " + total);
-        System.out.println("Free Memory: " + free);
-        System.out.println("Occupied Memory: " + occupiedAfterGc);
-        System.out.println();
+    public static long usedMemory() {
+
+        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+    }
+
+    public static float estimateIntSize() throws InterruptedException {
+        runGarbageCollection();
+        long occupiedBeforeAllocation = usedMemory();
 
         int n = 10_000_000;
         int[] myArray = new int[n];
         for (int i = 0; i < n; i++) {
-        
+
             myArray[i] = i;
         }
+        long occupiedAfterAllocation = usedMemory();
 
-        System.out.println("After int array allocation: ");
-        total = Runtime.getRuntime().totalMemory();
-        free = Runtime.getRuntime().freeMemory();
-        long sizeArray = total - free - occupiedAfterGc;
-        System.out.println("Total Memory: " + total);
-        System.out.println("Free Memory: " + free);
-        System.out.println("Occupied Memory: " + sizeArray);
-        System.out.println("Size of int: " + sizeArray / Float.valueOf(n));
-        System.out.println();
+        return (occupiedAfterAllocation - occupiedBeforeAllocation) / Float.valueOf(n);
+    }
 
+    public static float estimateReferenceSize() throws InterruptedException {
+        runGarbageCollection();
+        long occupiedBeforeAllocation = usedMemory();
+
+        int n = 10_000_000;
+        Integer[] myIntegerArray = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            // we assign to null, so there is on Object header
+            // and there is no Object value
+            // they dont occupy any space except the reference itself
+            myIntegerArray[i] = null;
+        }
+        long occupiedAfterAllocation = usedMemory();
+
+        return (occupiedAfterAllocation - occupiedBeforeAllocation) / Float.valueOf(n);
+    }
+
+    public static float estimateObjectSize() throws InterruptedException {
+        runGarbageCollection();
+        long occupiedBeforeAllocation = usedMemory();
+
+        int n = 10_000_000;
+        Object[] myObjectArray = new Object[n];
+        for (int i = 0; i < n; i++) {
+            // we assign to null, so there is on Object header
+            // and there is no Object value
+            // they dont occupy any space except the reference itself
+            myObjectArray[i] = new Object();
+        }
+        long occupiedAfterAllocation = usedMemory();
+
+        return (occupiedAfterAllocation - occupiedBeforeAllocation) / Float.valueOf(n);
+    }
+
+    public static float estimateStringSize() throws InterruptedException {
+        runGarbageCollection();
+        long occupiedBeforeAllocation = usedMemory();
+
+        int n = 10_000_000;
+        String[] myStringArray = new String[n];
+        for (int i = 0; i < n; i++) {
+
+            myStringArray[i] = String.valueOf(i);
+        }
+        long occupiedAfterAllocation = usedMemory();
+
+        return (occupiedAfterAllocation - occupiedBeforeAllocation) / Float.valueOf(n);
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        runGarbageCollection();
+        long mem = usedMemory();
+        System.out.println("Estimate of the size of an int: " + estimateIntSize());
+        System.out.println("Estimate of the size of a reference: " + estimateReferenceSize());
+        System.out.println("Estimate of the size of an Object: " + estimateObjectSize());
+        System.out.println("Estimate of the size of a String: " + estimateStringSize());
 
     }
 
